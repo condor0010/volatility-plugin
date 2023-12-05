@@ -1,11 +1,15 @@
-import inspect
 import os
 import re
 import socket
 
 from expressions import *
 
-checks = [ip4, ip6, password, wifi, MAC, B64, dollarSigns]
+checks = {"ip4": ip4,
+          "ip6": ip6,
+          "MAC": MAC,
+          "B64": B64,
+          "Hashes": dollarSigns
+          }
 
 
 def validateIP6(addr):
@@ -19,16 +23,6 @@ def validateIP6(addr):
         return True
     except:
         return False
-
-
-def retrieve_name(var):
-    """
-    Used to retrieve the name of var
-    :param var: The variable we want the name of
-    :return: The variable's name
-    """
-    callers_local_vars = inspect.currentframe().f_back.f_back.f_locals.items()
-    return [var_name for var_name, var_val in callers_local_vars if var_val is var]
 
 
 def appendMe(statusDict, s):
@@ -194,12 +188,10 @@ def findInFiles(target, results):
     """
 
     buffer = dict()
-
-    for check in checks:
-        currentCheck = retrieve_name(checks[checks.index(check)])[0]
+    for check in checks.keys():
         buffer[check] = dict()
-        buffer[check]["checkName"] = currentCheck
-        buffer[check]["fileName"] = results + '_' + currentCheck + '.txt'
+        buffer[check]["checkName"] = check
+        buffer[check]["fileName"] = results + '/results_' + check + '.txt'
         buffer[check]["buffer"] = []
 
     for root, dirs, files in os.walk(target):
@@ -212,7 +204,7 @@ def findInFiles(target, results):
             except FileNotFoundError:
                 break
             for check in checks:
-                buffer[check]["buffer"].append(checkFile(fileData, check, file, root, buffer[check]["checkName"]))
+                buffer[check]["buffer"].append(checkFile(fileData, checks[check], file, root, buffer[check]["checkName"]))
 
     for check in checks:
         with open(buffer[check]["fileName"], "w+") as outputFile:

@@ -19,24 +19,27 @@ def extract_files(memory_dump, extraction_dir):
     run_volatility_command(command, memory_dump)
 
 
-# Main function
-def main():
-    parser = argparse.ArgumentParser(description="Memory dump file extraction using Volatility.")
-    parser.add_argument("memory_dump", help="Path to the memory dump file")
-    args = parser.parse_args()
 
-    memory_dump = Path(args.memory_dump).resolve()
-    if not memory_dump.is_file():
-        print(f"Error: Memory dump file '{memory_dump}' not found.")
-        return
+def search():
+    # parser = argparse.ArgumentParser(description="Memory dump file extraction using Volatility.")
+    # parser.add_argument("memory_dump", help="Path to the memory dump file")
+    # args = parser.parse_args()
+    #
+    # memory_dump = Path(args.memory_dump).resolve()
+    # if not memory_dump.is_file():
+    #     print(f"Error: Memory dump file '{memory_dump}' not found.")
+    #     return
 
-    extraction_dir = os.path.join(os.getcwd(), 'extracted_files')
+    extraction_dir = os.path.join(os.getcwd(), 'charlie')
     results_dir = os.path.join(os.getcwd(), 'results')
     os.makedirs(extraction_dir, exist_ok=True)
+    os.makedirs(results_dir, exist_ok=True)
 
-    extract_files(str(memory_dump), extraction_dir)
+    # extract_files(str(memory_dump), extraction_dir)
 
     findInFiles(extraction_dir, results_dir)
 
 
-main()
+if __name__ == '__main__':
+    search()
+    
